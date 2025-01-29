@@ -1,2 +1,2 @@
 # ML_Project
-## It's end to end machine learning model.
+## It's an End to End Machine learning Project.
