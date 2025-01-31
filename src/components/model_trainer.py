@@ -17,9 +17,6 @@ from xgboost import XGBRegressor # type: ignore
 from src.exception import CustomException
 from src.logger import logging
 
-from src.components.data_ingestion import DataIngestion
-from src.components.data_transformation import DataTransformation
-
 from src.utils import save_object,evaluate_models
 
 @dataclass
@@ -70,17 +67,18 @@ class ModelTrainer:
                     # 'max_features':['auto','sqrt','log2'],
                     'n_estimators': [8,16,32,64,128,256]
                 },
-                "Linear Regression":{},
-                "XGBRegressor":{
+                "LinearRegression":{'fit_intercept': [True,False]},
+                "K- Neighbors Classifier":{'n_neighbors':[1,3,5,7,9,10]},
+                "XGBclassifier":{
                     'learning_rate':[.1,.01,.05,.001],
                     'n_estimators': [8,16,32,64,128,256]
                 },
-                "CatBoosting Regressor":{
+                "Cat Boosting classifier":{
                     'depth': [6,8,10],
                     'learning_rate': [0.01, 0.05, 0.1],
                     'iterations': [30, 50, 100]
                 },
-                "AdaBoost Regressor":{
+                "AdaBoostRegressor":{
                     'learning_rate':[.1,.01,0.5,.001],
                     # 'loss':['linear','square','exponential'],
                     'n_estimators': [8,16,32,64,128,256]
@@ -88,7 +86,7 @@ class ModelTrainer:
                 
             }
 
-            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models)
+            model_report:dict=evaluate_models(X_train=X_train,y_train=y_train,X_test=X_test,y_test=y_test,models=models,param=params)
             
             ## To get best model score from dict
             best_model_score = max(sorted(model_report.values()))
@@ -111,13 +109,4 @@ class ModelTrainer:
         
         except Exception as e:
             raise CustomException(e,sys)
-        
-if __name__=="__main__":
-    obj=DataIngestion()
-    train_data,test_data=obj.initiate_data_ingestion()
-
-    data_transformation=DataTransformation()
-    train_arr,test_arr,_=data_transformation.initiate_data_transformation(train_data,test_data)
-
-    model_trainer=ModelTrainer()
-    print(model_trainer.initiate_model_trainer(train_arr,test_arr))
+    
