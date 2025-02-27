@@ -1,5 +1,5 @@
 # ML_Project
-## It's an End to End Machine learning Project.
+## It's an End to End Machine learning Project on Student performance.
 
 #### Initial Setup
 To create env:
